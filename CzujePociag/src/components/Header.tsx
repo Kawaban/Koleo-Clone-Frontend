@@ -20,7 +20,7 @@ const AUTH_STATE_CHANGE_EVENT = 'authStateChange';
 
 function formatDateTime(date: Date) {
   const pad = (n: number) => n.toString().padStart(2, '0');
-  return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
 }
 
 const Header: React.FC<HeaderProps> = ({ showFilledSearch = true, fromStation = '', toStation = '', dateTime = '' }) => {
@@ -209,16 +209,10 @@ const Header: React.FC<HeaderProps> = ({ showFilledSearch = true, fromStation = 
                 <DatePicker
                   selected={selectedDate}
                   onChange={handleDateChange}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}
-                  dateFormat="dd.MM.yyyy HH:mm"
-                  timeCaption="Godzina"
+                  dateFormat="dd.MM.yyyy"
                   inline
                   locale="pl"
                   minDate={new Date()}
-                  minTime={minTime}
-                  maxTime={maxTime}
                 />
               </div>
             )}

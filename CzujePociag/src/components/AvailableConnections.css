@@ -21,6 +21,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
 .connection-card:hover {
@@ -29,7 +30,12 @@
 }
 
 .connection-card.expanded {
-  border: 2px solid #1890ff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.connection-card.selected {
+  border-color: #2ecc71;
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);
 }
 
 .connection-header {
@@ -54,7 +60,6 @@
 .price {
   font-size: 20px;
   font-weight: bold;
-  color: #2ecc71;
 }
 
 .time-info {

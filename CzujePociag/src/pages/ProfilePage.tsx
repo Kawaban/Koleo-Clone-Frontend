@@ -90,6 +90,8 @@ const ProfilePage = () => {
       }
 
       localStorage.removeItem('token');
+      // Trigger auth state change event
+      window.dispatchEvent(new Event('storage-changed'));
       navigate('/');
     } catch (error) {
       setDeleteError(error instanceof Error ? error.message : 'Failed to delete account');

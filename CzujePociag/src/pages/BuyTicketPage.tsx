@@ -27,6 +27,11 @@ interface BuyTicketPageProps {
   locations: Location[];
 }
 
+const formatTime = (timeString: string): string => {
+  const [hours, minutes] = timeString.split(':');
+  return `${hours}:${minutes}`;
+};
+
 const BuyTicketPage: React.FC<BuyTicketPageProps> = ({ locations }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -101,6 +106,13 @@ const BuyTicketPage: React.FC<BuyTicketPageProps> = ({ locations }) => {
     }
 
     try {
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Format departure and arrival times to ISO format
+      const departureDateTime = `${today}T${connectionDetails?.departureTime}:00`;
+      const arrivalDateTime = `${today}T${connectionDetails?.arrivalTime}:00`;
+
       const response = await fetch('http://localhost:8000/tickets/', {
         method: 'POST',
         headers: {
@@ -113,8 +125,8 @@ const BuyTicketPage: React.FC<BuyTicketPageProps> = ({ locations }) => {
           train_number: connectionDetails?.trainNumber,
           departure_station: connectionDetails?.from,
           arrival_station: connectionDetails?.to,
-          departure_time: connectionDetails?.departureTime,
-          arrival_time: connectionDetails?.arrivalTime,
+          departure_time: departureDateTime,
+          arrival_time: arrivalDateTime,
         }),
       });
 
@@ -194,11 +206,11 @@ const BuyTicketPage: React.FC<BuyTicketPageProps> = ({ locations }) => {
             <div className="time-info">
               <div>
                 <span className="label">Odjazd:</span>
-                <span className="value">{new Date(connectionDetails.departureTime).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}</span>
+                <span className="value">{formatTime(connectionDetails.departureTime)}</span>
               </div>
               <div>
                 <span className="label">Przyjazd:</span>
-                <span className="value">{new Date(connectionDetails.arrivalTime).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}</span>
+                <span className="value">{formatTime(connectionDetails.arrivalTime)}</span>
               </div>
             </div>
             <div className="price">

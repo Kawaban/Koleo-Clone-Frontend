@@ -2,43 +2,48 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AvailableConnections.css';
 
-interface SubConnection {
-  from: string;
-  to: string;
-  departureTime: string;
-  arrivalTime: string;
-  trainNumber: string;
+interface Segment {
+  departure_station: string;
+  arrival_station: string;
+  departure_time: string;
+  arrival_time: string;
+  duration: string;
+  train_number: string;
   price: string;
 }
 
-interface Connection {
-  from: string;
-  to: string;
-  departureTime: string;
-  arrivalTime: string;
-  date: string;
-  totalPrice: string;
-  trains: string[];
-  subConnections: SubConnection[];
-  numberOfChanges: number;
+interface RouteSummary {
+  departure_station: string;
+  arrival_station: string;
+  departure_time: string;
+  arrival_time: string;
+  total_duration: string;
+  total_price: string;
+  transfers: number;
+}
+
+interface Route {
+  summary: RouteSummary;
+  segments: Segment[];
 }
 
 interface AvailableConnectionsProps {
-  connections: Connection[];
+  routes: Route[];
+  onRouteSelect?: (index: number) => void;
+  selectedRoute?: number | null;
+  routeColors: string[];
 }
 
-const formatDuration = (departureTime: string, arrivalTime: string): string => {
-  const departure = new Date(departureTime);
-  const arrival = new Date(arrivalTime);
-  const diff = Math.abs(arrival.getTime() - departure.getTime());
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+const formatDuration = (duration: string): string => {
+  const durationInSeconds = parseFloat(duration);
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor((durationInSeconds % 3600) / 60);
   return `${hours}h ${minutes}min`;
 };
 
 const formatWaitingTime = (prevArrival: string, nextDeparture: string): string => {
-  const arrival = new Date(prevArrival);
-  const departure = new Date(nextDeparture);
+  const arrival = new Date(`1970-01-01T${prevArrival}`);
+  const departure = new Date(`1970-01-01T${nextDeparture}`);
   const diff = Math.abs(departure.getTime() - arrival.getTime());
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -46,33 +51,32 @@ const formatWaitingTime = (prevArrival: string, nextDeparture: string): string =
 };
 
 const formatTime = (timeString: string): string => {
-  const date = new Date(timeString);
-  return date.toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
-    minute: '2-digit', 
-    hour12: false 
-  });
+  const [hours, minutes] = timeString.split(':');
+  return `${hours}:${minutes}`;
 };
 
-const AvailableConnections: React.FC<AvailableConnectionsProps> = ({ connections }) => {
-  const [expandedConnection, setExpandedConnection] = useState<number | null>(null);
+const formatPrice = (price: string): string => {
+  return `${parseFloat(price).toFixed(2)} PLN`;
+};
+
+const AvailableConnections: React.FC<AvailableConnectionsProps> = ({ routes, onRouteSelect, selectedRoute, routeColors }) => {
+  const [expandedRoute, setExpandedRoute] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  const handleBuyTicket = (subConn: SubConnection) => {
-    // Navigate to ticket purchase page with connection details
+  const handleBuyTicket = (segment: Segment) => {
     navigate('/buy-ticket', {
       state: {
-        trainNumber: subConn.trainNumber,
-        from: subConn.from,
-        to: subConn.to,
-        departureTime: subConn.departureTime,
-        arrivalTime: subConn.arrivalTime,
-        price: subConn.price
+        trainNumber: segment.train_number,
+        from: segment.departure_station,
+        to: segment.arrival_station,
+        departureTime: segment.departure_time,
+        arrivalTime: segment.arrival_time,
+        price: segment.price
       }
     });
   };
 
-  if (connections.length === 0) {
+  if (routes.length === 0) {
     return (
       <div className="no-connections">
         Nie znaleziono połączeń dla wybranej trasy i daty.
@@ -81,96 +85,103 @@ const AvailableConnections: React.FC<AvailableConnectionsProps> = ({ connections
   }
 
   const toggleExpand = (index: number) => {
-    setExpandedConnection(expandedConnection === index ? null : index);
+    setExpandedRoute(expandedRoute === index ? null : index);
+    if (onRouteSelect) {
+      onRouteSelect(index);
+    }
   };
 
   return (
     <div className="available-connections">
       <h2>Dostępne połączenia</h2>
       <div className="connections-list">
-        {connections.map((connection, index) => (
+        {routes.map((route, index) => (
           <div 
             key={index} 
-            className={`connection-card ${expandedConnection === index ? 'expanded' : ''}`}
+            className={`connection-card ${expandedRoute === index ? 'expanded' : ''} ${selectedRoute === index ? 'selected' : ''}`}
             onClick={() => toggleExpand(index)}
+            style={{
+              borderColor: routeColors[index],
+              boxShadow: selectedRoute === index ? `0 0 0 2px ${routeColors[index]}40` : undefined
+            }}
           >
             <div className="connection-header">
               <div className="route">
-                <span className="station">{connection.from}</span>
+                <span className="station">{route.summary.departure_station}</span>
                 <span className="arrow">→</span>
-                <span className="station">{connection.to}</span>
+                <span className="station">{route.summary.arrival_station}</span>
               </div>
-              <div className="price">{connection.totalPrice}</div>
+              <div className="price" style={{ color: routeColors[index] }}>{formatPrice(route.summary.total_price)}</div>
             </div>
             
-              <div className="time-info">
-                <div className="departure">
+            <div className="time-info">
+              <div className="departure">
                 <span className="label">Odjazd:</span>
-                <span className="time">{formatTime(connection.departureTime)}</span>
+                <span className="time">{formatTime(route.summary.departure_time)}</span>
               </div>
               <div className="duration">
                 <span className="label">Czas podróży:</span>
-                <span className="time">{formatDuration(connection.departureTime, connection.arrivalTime)}</span>
-                </div>
-                <div className="arrival">
+                <span className="time">{formatDuration(route.summary.total_duration)}</span>
+              </div>
+              <div className="arrival">
                 <span className="label">Przyjazd:</span>
-                <span className="time">{formatTime(connection.arrivalTime)}</span>
+                <span className="time">{formatTime(route.summary.arrival_time)}</span>
               </div>
             </div>
             
-              <div className="additional-info">
+            <div className="additional-info">
               <div className="trains">
                 <span className="label">Pociągi:</span>
-                <span className="value">{connection.trains.join(', ')}</span>
-                </div>
+                <span className="value">{route.segments.map(seg => seg.train_number).join(', ')}</span>
+              </div>
               <div className="changes">
                 <span className="label">Przesiadki:</span>
-                <span className="value">{connection.numberOfChanges}</span>
+                <span className="value">{route.summary.transfers}</span>
               </div>
             </div>
 
-            {expandedConnection === index && (
+            {expandedRoute === index && (
               <div className="sub-connections">
                 <h3>Szczegóły podróży</h3>
-                {connection.subConnections.map((subConn, subIndex) => (
-                  <React.Fragment key={subIndex}>
+                {route.segments.map((segment, segIndex) => (
+                  <React.Fragment key={segIndex}>
                     <div className="sub-connection">
                       <div className="sub-connection-header">
-                        <span className="train-number">Pociąg {subConn.trainNumber}</span>
-                        <span className="sub-price">{subConn.price}</span>
+                        <span className="train-number">Pociąg {segment.train_number}</span>
+                        <span className="sub-price">{formatPrice(segment.price)}</span>
                       </div>
                       <div className="sub-route">
                         <div className="sub-station">
-                          <span className="time">{formatTime(subConn.departureTime)}</span>
-                          <span className="name">{subConn.from}</span>
+                          <span className="time">{formatTime(segment.departure_time)}</span>
+                          <span className="name">{segment.departure_station}</span>
                         </div>
                         <div className="sub-duration">
-                          {formatDuration(subConn.departureTime, subConn.arrivalTime)}
+                          {formatDuration(segment.duration)}
                         </div>
                         <div className="sub-station">
-                          <span className="time">{formatTime(subConn.arrivalTime)}</span>
-                          <span className="name">{subConn.to}</span>
+                          <span className="time">{formatTime(segment.arrival_time)}</span>
+                          <span className="name">{segment.arrival_station}</span>
                         </div>
                       </div>
                       <div className="sub-connection-footer">
                         <button 
                           className="buy-ticket-button"
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent card expansion toggle
-                            handleBuyTicket(subConn);
+                            e.stopPropagation();
+                            handleBuyTicket(segment);
                           }}
                         >
                           Kup bilet
                         </button>
                       </div>
                     </div>
-                    {subIndex < connection.subConnections.length - 1 && (
+                    {segIndex < route.segments.length - 1 && (
                       <div className="waiting-time">
                         <span>
                           {formatWaitingTime(
-                            subConn.arrivalTime,
-                            connection.subConnections[subIndex + 1].departureTime
-                          ).replace('oczekiwania', 'oczekiwania')}
+                            segment.arrival_time,
+                            route.segments[segIndex + 1].departure_time
+                          )}
                         </span>
                       </div>
                     )}

@@ -4,23 +4,29 @@ import { useNavigate } from 'react-router-dom';
 import boliwiaImage from '../assets/boliwia_1.jpg'; 
 import lublinImage from '../assets/lublin_1.jpg'; 
 
-interface Connection {
-  from: string;
-  to: string;
-  departureTime: string;
-  arrivalTime: string;
-  date: string;
-  totalPrice: string;
-  trains: string[];
-  subConnections: {
-    from: string;
-    to: string;
-    departureTime: string;
-    arrivalTime: string;
-    trainNumber: string;
-    price: string;
-  }[];
-  numberOfChanges: number;
+interface Segment {
+  departure_station: string;
+  arrival_station: string;
+  departure_time: string;
+  arrival_time: string;
+  duration: string;
+  train_number: string;
+  price: string;
+}
+
+interface RouteSummary {
+  departure_station: string;
+  arrival_station: string;
+  departure_time: string;
+  arrival_time: string;
+  total_duration: string;
+  total_price: string;
+  transfers: number;
+}
+
+interface Route {
+  summary: RouteSummary;
+  segments: Segment[];
 }
 
 interface ConnectionProps {
@@ -42,7 +48,7 @@ const ConnectionCard: React.FC<ConnectionProps> = ({ from, to, price, onClick, i
 };
 
 const PopularConnections: React.FC = () => {
-  const [connections, setConnections] = useState<Connection[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -78,32 +84,11 @@ const PopularConnections: React.FC = () => {
           )
         );
 
-        const transformedConnections = results.map(data => {
-          if (data.content && data.content.length > 0) {
-            return {
-              from: data.content[0].departure_station,
-              to: data.content[data.content.length - 1].arrival_station,
-              departureTime: `${data.content[0].departure_time}`,
-              arrivalTime: `${data.content[data.content.length - 1].arrival_time}`,
-              date: popularRoutes[0].date,
-              totalPrice: data.content.reduce((total: number, conn: any) => 
-                total + parseFloat(conn.price), 0).toFixed(2),
-              trains: data.content.map((conn: any) => conn.train_number),
-              subConnections: data.content.map((conn: any) => ({
-                from: conn.departure_station,
-                to: conn.arrival_station,
-                departureTime: conn.departure_time,
-                arrivalTime: conn.arrival_time,
-                trainNumber: conn.train_number,
-                price: conn.price
-              })),
-              numberOfChanges: data.content.length - 1
-            };
-          }
-          return null;
-        }).filter((conn): conn is Connection => conn !== null);
-
-        setConnections(transformedConnections);
+      const firstRoutes = results
+        .map(data => (data.routes && data.routes.length > 0) ? data.routes[0] : null)
+        .filter((route): route is Route => route !== null);
+      
+      setRoutes(firstRoutes);
       } catch (error) {
         setError('Failed to fetch connections');
       } finally {
@@ -114,12 +99,12 @@ const PopularConnections: React.FC = () => {
     fetchPopularConnections();
   }, []);
 
-  const handleConnectionClick = (connection: Connection) => {
+  const handleConnectionClick = (route: Route) => {
     navigate('/map', {
       state: {
-        fromStation: connection.from,
-        toStation: connection.to,
-        date: connection.date
+        fromStation: route.summary.departure_station,
+        toStation: route.summary.arrival_station,
+        date: new Date().toISOString().split('T')[0]
       }
     });
   };
@@ -132,15 +117,15 @@ const PopularConnections: React.FC = () => {
       <div className="connections-grid">
         {loading && <p>Ładowanie połączeń...</p>}
         {error && <p className="error">{error}</p>}
-        {!loading && !error && connections.map((connection, index) => (
-        <ConnectionCard
+        {!loading && !error && routes.map((route, index) => (
+          <ConnectionCard
             key={index}
-            from={connection.from}
-            to={connection.to}
-            price={`${connection.totalPrice} PLN`}
-            onClick={() => handleConnectionClick(connection)}
+            from={route.summary.departure_station}
+            to={route.summary.arrival_station}
+            price={`${parseFloat(route.summary.total_price).toFixed(2)} PLN`}
+            onClick={() => handleConnectionClick(route)}
             image={index === 0 ? boliwiaImage : lublinImage}
-        />
+          />
         ))}
       </div>
     </section>

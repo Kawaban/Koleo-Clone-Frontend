@@ -53,6 +53,23 @@ const TicketConfirmationPage: React.FC = () => {
     fetchLatestTicket();
   }, [navigate]);
 
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('pl-PL', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('pl-PL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
   if (error) {
     return <div className="error-message">{error}</div>;
   }
@@ -60,17 +77,6 @@ const TicketConfirmationPage: React.FC = () => {
   if (!ticket) {
     return <div className="loading">Ładowanie szczegółów biletu...</div>;
   }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('pl-PL', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   return (
     <div className="ticket-confirmation-page">
@@ -84,20 +90,19 @@ const TicketConfirmationPage: React.FC = () => {
           </div>
 
           <div className="route-info">
-              {/* <div className="station-info"> */}
-                <div className="departure">
-                  <h3 style={{marginTop: '0'}}>Stacja początkowa</h3>
-                  <p>{ticket.departure_station}</p>
-                  <p className="time">{formatDate(ticket.departure_time)}</p>
-                </div>
-                <div className="arrow">→</div>
-                <div className="arrival">
-                  <h3 style={{marginTop: '0'}}>Stacja końcowa</h3>
-                  <p>{ticket.arrival_station}</p>
-                  <p className="time">{formatDate(ticket.arrival_time)}</p>
-                </div>
-              {/* </div> */}
-            {/* </div> */}
+            <div className="departure">
+              <h3 style={{marginTop: '0'}}>Stacja początkowa</h3>
+              <p>{ticket.departure_station}</p>
+              {/* <h3>Data wyjazdu</h3> */}
+              <p>{formatDate(ticket.departure_time)}</p>
+              <p className="time">Godzina: {formatTime(ticket.departure_time)}</p>
+            </div>
+            <div className="arrow">→</div>
+            <div className="arrival">
+              <h3 style={{marginTop: '0'}}>Stacja końcowa</h3>
+              <p>{ticket.arrival_station}</p>
+              <p className="time">Godzina: {formatTime(ticket.arrival_time)}</p>
+            </div>
           </div>
 
           <div className="seat-info">
