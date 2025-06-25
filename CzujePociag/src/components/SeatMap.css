@@ -1,0 +1,137 @@
+.seat-map-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 3 / 1;
+  margin: 0 auto;
+  padding-bottom: 60px; /* Make room for the legend */
+}
+
+.seat-map-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 60px); /* Adjust for legend */
+  z-index: 2;
+  pointer-events: none; /* Allow clicks to pass through to seats */
+}
+
+.seat-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 60px); /* Adjust for legend */
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.seat-row {
+  display: flex;
+  flex: 1;
+}
+
+.seat-cell {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.seat-cell::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background: transparent;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.seat-cell.has-seat::before {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid #2ecc71;
+}
+
+.seat-cell.disabled {
+  cursor: not-allowed;
+  opacity: 0;
+}
+
+.seat-cell.unavailable::before {
+  background-color: #e74c3c;
+  border: 2px solid #c0392b;
+}
+
+.seat-cell.selected::before {
+  background-color: #2ecc71;
+  border: 2px solid #27ae60;
+}
+
+.seat-cell:hover:not(.disabled):not(.unavailable)::before {
+  background-color: rgba(46, 204, 113, 0.2);
+}
+
+/* Legend styles */
+.seat-legend {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  z-index: 3;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.legend-box.has-seat {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid #2ecc71;
+}
+
+.legend-box.selected {
+  background-color: #2ecc71;
+  border: 2px solid #27ae60;
+}
+
+.legend-box.unavailable {
+  background-color: #e74c3c;
+  border: 2px solid #c0392b;
+}
+
+.legend-item span {
+  font-size: 14px;
+  color: #333;
+}
+
+.seat-number {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  z-index: 3;
+} 

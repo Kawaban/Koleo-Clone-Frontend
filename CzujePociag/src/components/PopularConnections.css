@@ -1,0 +1,78 @@
+.popular-connections-section {
+  padding: 2rem;
+  background-color: #f5f5f5;
+  }
+  
+  .popular-connections-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  margin-bottom: 2rem;
+  }
+  
+  .section-title {
+  font-size: 1.5rem;
+    color: #333;
+  margin: 0;
+  }
+  
+  .see-all-link {
+  color: #1890ff;
+    text-decoration: none;
+  font-weight: 500;
+  }
+  
+  .see-all-link:hover {
+    text-decoration: underline;
+  }
+  
+  .connections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  }
+  
+  .connection-card {
+  background-color: white;
+    border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  }
+  
+  .connection-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .connection-image {
+  width: 100%;
+  height: 200px;
+    object-fit: cover; 
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  }
+  
+  .connection-details {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+  }
+  
+  .connection-price {
+  font-size: 1.2rem;
+  color: #1890ff;
+  margin: 0;
+  font-weight: 600;
+}
+
+.error {
+  color: #ff4d4f;
+  text-align: center;
+  padding: 1rem;
+  background-color: #fff1f0;
+  border-radius: 4px;
+  margin: 1rem 0;
+  }

@@ -1,0 +1,261 @@
+.header {
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.train-logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+}
+
+.auth-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+button.auth-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+}
+
+button.auth-button:hover {
+  background-color: #c0392b;
+}
+
+a.auth-button {
+  background-color: #2ecc71;
+  color: white;
+}
+
+a.auth-button:hover {
+  background-color: #27ae60;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%; 
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; 
+  font-size: 16px; 
+}
+
+.header-bottom-left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; 
+  font-size: 16px; 
+  width: 100%;
+}
+
+/* .header-bottom-left + .header-bottom-right {
+  width: 60%;
+} */
+
+.header-bottom-left:has(+ .header-bottom-right) {
+  width: 60%;
+  justify-content: flex-end;
+}
+
+.header-bottom-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; 
+  font-size: 16px; 
+  width: 40%;
+}
+
+.app-name {
+  font-size: 16px; 
+  font-weight: bold;
+  color: #333;
+}
+
+.search-section {
+  display: flex;
+  flex-direction: column; 
+  gap: 15px;
+  width: 50%; 
+  margin-left: auto; 
+  margin-right: auto; 
+}
+
+.header-bottom-left:has(+ .header-bottom-right) .search-section {
+  margin-right: 0;
+  margin-left: auto;
+  width: 58.333%;
+}
+
+.search-input-group {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #000; 
+  border-radius: 20px;
+  background-color: transparent; 
+  font-size: 14px;
+  color: #333;
+  appearance: none; /* Removes default select styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+.search-input option {
+  color: #333;
+  padding: 8px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.search-input::placeholder {
+  color: #aaa; 
+}
+
+.input-icon {
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.date-time-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.calendar-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.date-time-display {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.date-time-trigger {
+  padding-left: 20px;
+  padding-right: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 16px;
+  transition: background 0.2s;
+}
+
+.date-time-trigger:hover, .date-time-trigger:focus {
+  background: #f0f0f0;
+}
+
+.login-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.login-text {
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+  padding: 8px 18px;
+  border-radius: 16px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.login-text:hover, .login-text:focus {
+  background: #f0f0f0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.header-bottom-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.search-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-left: 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+.search-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

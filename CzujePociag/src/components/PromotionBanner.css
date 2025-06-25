@@ -1,0 +1,84 @@
+.promotion-banner {
+    display: flex;
+    align-items: center;
+    background-color: #f0f8ff; /* Jasny niebieski dla kontrastu */
+    padding: 40px;
+    /* margin: 50px 0px; */
+    /* max-width: 1000px; */
+    border-radius: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    gap: 40px;
+  }
+  
+  .promotion-content {
+    flex: 2;
+    text-align: left;
+  }
+  
+  .promotion-title {
+    font-size: 32px;
+    color: #0c0c0c;
+    margin-bottom: 15px;
+    line-height: 1.2;
+  }
+  
+  .promotion-discount {
+    font-size: 60px;
+    font-weight: bold;
+    color: #28a745; /* Zielony dla wyróżnienia */
+    margin-bottom: 10px;
+    margin-top: 20px;
+  }
+  
+  .promotion-description {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+  
+  .buy-now-button {
+    background-color: #ffc107;
+    color: #333;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .buy-now-button:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+  }
+  
+  .promotion-image-placeholder {
+    flex: 1;
+    height: 250px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .promotion-image-placeholder::before {
+    color: #888;
+    font-size: 18px;
+  }
+
+  .promotion-image-placeholder {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .promotion-image {
+    width: 100%;
+    max-width: 300px; /* Set a maximum width for the image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Optional: Add rounded corners */
+  }

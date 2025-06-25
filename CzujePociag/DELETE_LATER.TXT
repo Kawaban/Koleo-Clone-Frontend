@@ -1,0 +1,28 @@
+src
+├── App.css
+├── App.tsx
+├── assets
+│   └── train-logo.svg  // Załóżmy, że logo pociągu będzie svg
+│   └── calendar-icon.svg // Ikona kalendarza
+│   └── user-icon.svg     // Ikona użytkownika
+│   └── facebook-icon.svg // Ikony mediów społecznościowych
+│   └── instagram-icon.svg
+│   └── youtube-icon.svg
+│   └── twitter-icon.svg
+├── components
+│   ├── Header.tsx
+│   ├── Header.css
+│   ├── Footer.tsx
+│   ├── Footer.css
+│   ├── SearchForm.tsx
+│   ├── SearchForm.css
+│   ├── PopularConnections.tsx
+│   ├── PopularConnections.css
+│   ├── PromotionBanner.tsx
+│   └── PromotionBanner.css
+├── pages
+│   ├── HomePage.tsx
+│   └── HomePage.css
+├── index.css
+├── main.tsx
+└── vite-env.d.ts
