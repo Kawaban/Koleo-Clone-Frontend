@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProfilePage.css';
+import {useAuth0} from "@auth0/auth0-react";
 
 interface Ticket {
   id: number;
@@ -28,18 +29,17 @@ const ProfilePage = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+
 
     const fetchData = async () => {
       try {
-        // Get user info from JWT token
+        const token = await getAccessTokenSilently();
+        console.log(token)
         const tokenData = JSON.parse(atob(token.split('.')[1]));
+        console.log(tokenData)
         setUserProfile({
           email: tokenData.email,
           first_name: tokenData.first_name || '',
@@ -70,7 +70,8 @@ const ProfilePage = () => {
   }, [navigate]);
 
   const handleDeleteAccount = async () => {
-    const token = localStorage.getItem('token');
+    const token = await getAccessTokenSilently();
+    console.log(token)
     if (!token) {
       navigate('/login');
       return;

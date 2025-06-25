@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './BuyTicketPage.css';
 import mapImage from '../assets/map.png';
 import SeatMap from '../components/SeatMap';
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 interface Location {
   id: number;
@@ -49,23 +51,19 @@ const BuyTicketPage: React.FC<BuyTicketPageProps> = ({ locations }) => {
     arrivalTime: string;
     price: string;
   } | null;
-
+  const { getAccessTokenSilently } = useAuth0();
   useEffect(() => {
     if (!connectionDetails) {
       navigate('/', { replace: true });
       return;
     }
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login', { replace: true });
-      return;
-    }
 
     const fetchTrainDetails = async () => {
       setLoading(true);
       setError(null);
 
+      const token = await getAccessTokenSilently();
       try {
         const response = await fetch(`http://localhost:8000/trains/${connectionDetails.trainNumber}/`, {
           headers: {
@@ -99,11 +97,7 @@ const BuyTicketPage: React.FC<BuyTicketPageProps> = ({ locations }) => {
       return;
     }
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login', { replace: true });
-      return;
-    }
+    const token = await getAccessTokenSilently();
 
     try {
       // Get today's date in YYYY-MM-DD format

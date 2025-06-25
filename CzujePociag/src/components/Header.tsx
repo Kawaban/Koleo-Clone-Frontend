@@ -7,6 +7,7 @@ import searchIcon from '../assets/search-icon.svg';
 import calendarIcon from '../assets/calendar-icon.svg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import {useAuth0} from "@auth0/auth0-react";
 
 interface HeaderProps {
   showFilledSearch?: boolean;
@@ -31,19 +32,27 @@ const Header: React.FC<HeaderProps> = ({ showFilledSearch = true, fromStation = 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [pickerOpen, setPickerOpen] = useState(false);
   const [availableStations, setAvailableStations] = useState<string[]>([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { getAccessTokenSilently } = useAuth0();
+
 
   // Check auth state on mount and when location changes
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-
-    const handleStorageChange = () => {
-      const token = localStorage.getItem('token');
+    const checkToken = async () => {
+      const token = await getAccessTokenSilently();
+      console.log(token);
       setIsLoggedIn(!!token);
+      console.log(`Token checked: ${!!token}`);
+    };
+
+    checkToken();
+
+    const handleStorageChange = async () => {
+      await checkToken();
     };
 
     window.addEventListener('storage-changed', handleStorageChange);
+
     return () => {
       window.removeEventListener('storage-changed', handleStorageChange);
     };
@@ -72,6 +81,7 @@ const Header: React.FC<HeaderProps> = ({ showFilledSearch = true, fromStation = 
   };
 
   const handleUserIconClick = () => {
+    console.log(`User icon clicked, isLoggedIn: ${isLoggedIn}`);
     if (isLoggedIn) {
       navigate('/profile');
     } else {
